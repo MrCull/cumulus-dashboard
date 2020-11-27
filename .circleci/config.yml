@@ -1,57 +1,47 @@
-version: 2
-experimental:
-  pipelines: true
+version: 2.1
+pipelines: true
 jobs:
   build:
-    machine: true
     working_directory: ~/cumulus-dashboard
+    docker:
+      - image: cimg/node:12.18.0
     steps:
       - checkout
 
       - run:
           name: Install Dependencies
           command: |
-            export NVM_DIR="/opt/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            nvm install v12.18.0
-            nvm alias default v12.18.0
-            npm install -g npm
-            npm ci --no-optional
+            npm ci
 
       - run:
           name: Run Audit-CI
           command: |
-            export NVM_DIR="/opt/circleci/.nvm"
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             npm run audit-ci
 
       - run:
           name: Build Dashboard
           command: |
-            # build dashboard
-            docker run --rm \
-              -v /home/circleci/.cache:/root/.cache \
-              -v $(pwd):/home \
-              --workdir /home \
-              -e APIROOT=http://api:5001 \
-              node:12.18.0 \
               npm run build
 
       - run:
           name: Run Unit Tests
           command: |
-            docker run --rm \
-              -v /home/circleci/.cache:/root/.cache \
-              -v $(pwd):/home \
-              --workdir /home \
-              node:12.18.0 \
               npm run test
+
+      - setup_remote_docker:
+          version: 19.03.13
 
       - run:
           name: Run End-To-End Tests
           command: |
             echo $(pwd) && \
-            npm run e2e-tests
+            npm run start-dashboard
+
+      - run:
+          name: Run Cypress Tests
+          command: |
+            echo $(pwd) && \
+            npm run cypress-ci
 
       - store_artifacts:
           path: ~/cumulus-dashboard/cypress/screenshots
