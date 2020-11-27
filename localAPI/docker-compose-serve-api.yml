@@ -16,9 +16,9 @@ services:
       - cmr_provider=CUMULUS
       - FAKE_AUTH=true
   shim:   # empty container to open ports
-    image: node:12.18.0
+    image: alpine:latest
     command:
-      bash -c "tail -f /dev/null"
+      tail -f /dev/null
     working_dir:
       /cumulus-dashboard
     ports:
