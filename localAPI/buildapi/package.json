@@ -1,0 +1,14 @@
+{
+  "name": "api-container",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@cumulus/api": "^4.0.0"
+  }
+}

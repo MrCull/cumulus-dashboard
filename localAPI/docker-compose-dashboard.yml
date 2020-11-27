@@ -1,16 +1,15 @@
 version: "3"
 services:
   dashboard:
-    image: node:12.18.0
+    image: cumulusdashboard:latest
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
     depends_on:
       - serve_api
     network_mode: "service:shim"
-    command:
-      bash -c "npm rebuild node-sass && npm run build && npm run serve:prod"
     working_dir:
       /cumulus-dashboard
-    volumes:
-      - ../:/cumulus-dashboard:cached
     environment:
       - APIROOT=http://localhost:5001
       - ESROOT=http://example.com
@@ -26,7 +25,5 @@ services:
       bash -c "tail -f /dev/null"
     working_dir:
       /cumulus-dashboard
-    volumes:
-      - ../:/cumulus-dashboard:cached
     ports:
-      - "3000:3000"
+      - "3000:80"

@@ -17,8 +17,6 @@ services:
       bash -c "tail -f /dev/null"
     working_dir:
       /cumulus-dashboard
-    volumes:
-      - ../:/cumulus-dashboard:cached
     ports:
       - "9200:9200"
       - "4550-4586:4550-4586"
