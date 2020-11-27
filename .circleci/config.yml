@@ -8,14 +8,15 @@ jobs:
     steps:
       - checkout
 
-      - run:
-          name: Install Deps
-          command: sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
 
       - run:
           name: Install Dependencies
           command: |
             npm ci
+
+      - run:
+          name: Install Deps
+          command: npm install xvfb
 
       - run:
           name: Run Audit-CI
@@ -36,7 +37,7 @@ jobs:
           version: 19.03.13
 
       - run:
-          name: Run End-To-End Tests
+          name: Start the Dashboard
           command: |
             echo $(pwd) && \
             npm run start-dashboard
@@ -44,7 +45,6 @@ jobs:
       - run:
           name: Run Cypress Tests
           command: |
-            echo $(pwd) && \
             npm run cypress-ci
 
       - store_artifacts:
