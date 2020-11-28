@@ -3,18 +3,24 @@ pipelines: true
 jobs:
   build:
     working_directory: ~/cumulus-dashboard
-    docker:
-      - image: cimg/node:12.18.0
+    machine: true
     steps:
       - checkout
+
+      - run:
+          name: Install Desired Node Version
+          command: |
+            nvm install v12.18.0
+            nvm alias default v12.18.0
+
 
       - restore_cache:
           keys:
             # Find a cache corresponding to this specific package-lock.json checksum
             # when this file is changed, this key will fail
-            - v1-npm-deps-{{ checksum "package-lock.json" }}
+            - v1.1-npm-deps-{{ checksum "package-lock.json" }}
             # Find the most recently generated cache used from any branch
-            - v1-npm-deps-
+            - v1.1-npm-deps-
 
       - run:
           name: Install Dependencies
@@ -24,7 +30,8 @@ jobs:
       - save_cache:
           paths:
             - ~/usr/local/lib/node_modules
-          key: v1-npm-deps-{{ checksum "package-lock.json" }}
+            - ~/.cache
+          key: v1.1-npm-deps-{{ checksum "package-lock.json" }}
 
       - run:
           name: Run Audit-CI
@@ -40,9 +47,6 @@ jobs:
           name: Run Unit Tests
           command: |
               npm run test
-
-      - setup_remote_docker:
-          version: 19.03.13
 
       - run:
           name: Run End to End Tests
