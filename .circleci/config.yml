@@ -8,15 +8,23 @@ jobs:
     steps:
       - checkout
 
+      - restore_cache:
+          keys:
+            # Find a cache corresponding to this specific package-lock.json checksum
+            # when this file is changed, this key will fail
+            - v1-npm-deps-{{ checksum "package-lock.json" }}
+            # Find the most recently generated cache used from any branch
+            - v1-npm-deps-
 
       - run:
           name: Install Dependencies
           command: |
             npm ci
 
-      - run:
-          name: Install Deps
-          command: npm install xvfb
+      - save_cache:
+          paths:
+            - ~/usr/local/lib/node_modules
+          key: v1-npm-deps-{{ checksum "package-lock.json" }}
 
       - run:
           name: Run Audit-CI
@@ -37,15 +45,9 @@ jobs:
           version: 19.03.13
 
       - run:
-          name: Start the Dashboard
+          name: Run End to End Tests
           command: |
-            echo $(pwd) && \
-            npm run start-dashboard
-
-      - run:
-          name: Run Tests
-          command: |
-            npm run cypress-ci
+            npm run e2e-tests
 
       - store_artifacts:
           path: ~/cumulus-dashboard/cypress/screenshots
