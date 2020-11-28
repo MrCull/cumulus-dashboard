@@ -24,6 +24,7 @@ jobs:
             nvm alias default v12.18.0
             npm install -g npm
             npm ci
+            npx cypress verify
 
       - save_cache:
           paths:
