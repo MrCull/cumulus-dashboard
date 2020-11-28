@@ -2,17 +2,10 @@ version: 2.1
 pipelines: true
 jobs:
   build:
-    working_directory: ~/cumulus-dashboard
     machine: true
+    working_directory: ~/cumulus-dashboard
     steps:
       - checkout
-
-      - run:
-          name: Install Desired Node Version
-          command: |
-            nvm install v12.18.0
-            nvm alias default v12.18.0
-
 
       - restore_cache:
           keys:
@@ -25,6 +18,11 @@ jobs:
       - run:
           name: Install Dependencies
           command: |
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            nvm install v12.18.0
+            nvm alias default v12.18.0
+            npm install -g npm
             npm ci
 
       - save_cache:
@@ -36,17 +34,23 @@ jobs:
       - run:
           name: Run Audit-CI
           command: |
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             npm run audit-ci
 
       - run:
           name: Build Dashboard
           command: |
-              npm run build
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            npm run build
 
       - run:
           name: Run Unit Tests
           command: |
-              npm run test
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            npm run test
 
       - run:
           name: Run End to End Tests
