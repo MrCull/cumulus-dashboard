@@ -13,7 +13,7 @@ done
 
 >&2 echo "LocalAPI is up - checking Localstack"
 
-until curl --connect-timeout 5 -sS curl localhost:3000 2> /dev/null | grep "Cumulus Dashboard" > /dev/null; do
+until curl --connect-timeout 5 -sS curl localhost:80 2> /dev/null | grep "Cumulus Dashboard" > /dev/null; do
   >&2 echo "Dashboard is unavailable - sleeping"
   sleep 2
 done

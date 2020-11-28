@@ -4,7 +4,7 @@ jobs:
   build:
     working_directory: ~/cumulus-dashboard
     docker:
-      - image: cypress/base:12.18.0
+      - image: cimg/node:12.18.0
     steps:
       - checkout
 
@@ -43,7 +43,7 @@ jobs:
             npm run start-dashboard
 
       - run:
-          name: run tests
+          name: Run Tests
           command: |
             npm run cypress-ci
 

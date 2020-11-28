@@ -1,11 +1,7 @@
 *.md
 .git
-ancillary
 bin
-cypress
 dist
-localAPI
 ngap
 node_modules
-test
 tmp
