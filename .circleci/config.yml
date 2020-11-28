@@ -1,5 +1,17 @@
 version: 2.1
 pipelines: true
+orbs:
+  cypress: cypress-io/cypress@1.26.0
+executors:
+  base-12:
+    docker:
+      - image: cypress/base-12-18-3
+    environment:
+      LOCALSTACK_HOST: localhost
+      LOCAL_ES_HOST: localhost
+      CYPRESS_TESTING: true
+      NODE_ENV: test
+
 jobs:
   build:
     working_directory: ~/cumulus-dashboard
@@ -36,22 +48,29 @@ jobs:
       - setup_remote_docker:
           version: 19.03.13
 
-      - run:
-          name: Start the Dashboard
-          command: |
-            echo $(pwd) && \
-            npm run start-dashboard
+      - cypress/run:
+         executor: base-12
+         store_artifacts: true
+         start: npm run start-dashboard
+         wait-on: 'http://localhost:5001'
 
-      - run:
-          name: Run Cypress Tests
-          command: |
-            npm run cypress-ci
+      # - run:
+      #     name: Start the Dashboard
+      #     command: |
+      #       echo $(pwd) && \
+      #       npm run start-dashboard
 
-      - store_artifacts:
-          path: ~/cumulus-dashboard/cypress/screenshots
 
-      - store_artifacts:
-          path: ~/cumulus-dashboard/cypress/videos
+      # - run:
+      #     name: Run Cypress Tests
+      #     command: |
+      #       npm run cypress-ci
+
+      # - store_artifacts:
+      #     path: ~/cumulus-dashboard/cypress/screenshots
+
+      # - store_artifacts:
+      #     path: ~/cumulus-dashboard/cypress/videos
 
   deploy:
     machine: true
