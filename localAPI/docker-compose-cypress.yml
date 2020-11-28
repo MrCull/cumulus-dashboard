@@ -10,7 +10,3 @@ services:
       - dashboard
     working_dir:
       /cumulus-dashboard
-  shim:
-    image: alpine:latest
-    command:
-      tail -f /dev/null

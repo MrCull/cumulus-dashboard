@@ -5,6 +5,16 @@ services:
     build:
       context: ../
       dockerfile: docker/Dockerfile
+      args:
+        APIROOT: 'http://localhost:5001'
+        AUTH_METHOD: 'earthdata'
+        AWS_REGION: 'us-east-1'
+        DAAC_NAME: 'local'
+        ESROOT: 'http://example.com'
+        HIDE_PDR: 'false'
+        SHOW_DISTRIBUTION_API_METRICS: 'true'
+        SHOW_TEA_METRICS: 'false'
+        STAGE: 'testing'
     depends_on:
       - serve_api
     network_mode: "service:shim"
@@ -12,14 +22,6 @@ services:
       /cumulus-dashboard
     environment:
       - PORT=3000
-      - APIROOT=http://localhost:5001
-      - ESROOT=http://example.com
-      - HIDE_PDR=false
-      - DAAC_NAME=local
-      - STAGE=LOCALHOST-Development
-      - SHOW_DISTRIBUTION_API_METRICS=true
-      - SHOW_TEA_METRICS=false
-      - AUTH_METHOD=earthdata
   shim:   # empty container to open ports
     image: alpine:latest
     command:
