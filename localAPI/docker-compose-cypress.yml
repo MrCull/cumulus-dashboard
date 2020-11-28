@@ -5,7 +5,6 @@ services:
     build:
       context: ../
       dockerfile: localAPI/waitingcypress/Dockerfile
-    entrypoint: [ "/cumulus-dashboard/wait-for-dashboard.sh", "npm", "run", "cypress-ci"]
     network_mode: "service:shim"
     depends_on:
       - dashboard
