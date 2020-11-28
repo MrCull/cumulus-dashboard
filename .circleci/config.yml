@@ -55,7 +55,9 @@ jobs:
       - run:
           name: Run End to End Tests
           command: |
-            npm run e2e-tests
+            export NVM_DIR="/opt/circleci/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            npm run cypress-ci
 
       - store_artifacts:
           path: ~/cumulus-dashboard/cypress/screenshots
