@@ -49,7 +49,9 @@ jobs:
           version: 19.03.13
 
       - cypress/run:
-         start: npm run start-dashboard
+         executor: base-12
+         store_artifacts: true
+         start: 'npm run start-dashboard'
          wait-on: 'http://localhost:5001'
 
       # - run:
