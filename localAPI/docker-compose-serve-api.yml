@@ -1,8 +1,7 @@
 version: "3"
 services:
   serve_api:
-    build: ./buildapi
-    image: cumuluslocalapi:latest
+    image: cumuluss/cumuluslocalapi:4.0.0
     network_mode: "service:shim"
     depends_on:
       - localstack
